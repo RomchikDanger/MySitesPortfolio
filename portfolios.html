@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Гескин Роман - Разработчик</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #92ff92;
+            --secondary-color: #8d53ff;
+            --accent-color: #FFB7B7;
+            --light-color: #FFF9F2;
+            --dark-color: #5E5E5E;
+            --success-color: #B5EAD7;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+            --border-radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Анимация загрузки */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .loader-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loader-text {
+            color: white;
+            font-size: 1.2rem;
+            opacity: 0;
+            animation: fadeIn 1.5s ease-in-out forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .header-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://source.unsplash.com/random/1600x900/?code,developer') center/cover;
+            opacity: 0.1;
+            z-index: 1;
+        }
+
+        .name-title {
+            font-size: 0;
+            overflow: hidden;
+        }
+
+        .name-title h1 {
+            display: inline-block;
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            animation: typing 2s steps(20) forwards, blink-caret 0.75s step-end infinite;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        @keyframes typing {
+            from { width: 0; font-size: 0; }
+            to { width: 100%; font-size: 2.8rem; }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: white; }
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease-in-out 2s forwards;
+            transform: translateY(20px);
+            font-weight: 300;
+        }
+
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .about {
+            padding: 3rem 0;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 3rem;
+            padding: 2.5rem;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease-in-out 2.5s forwards;
+        }
+
+        .about h2 {
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+        }
+
+        .projects {
+            padding: 2rem 0;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease-in-out 3s forwards;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2.2rem;
+            color: var(--dark-color);
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            margin: 0.5rem auto 0;
+            border-radius: 2px;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2.5rem;
+            padding: 0 20px;
+        }
+
+        .project-card {
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .project-card:nth-child(1) { animation: fadeInUp 0.8s ease-in-out 3.3s forwards; }
+        .project-card:nth-child(2) { animation: fadeInUp 0.8s ease-in-out 3.5s forwards; }
+        .project-card:nth-child(3) { animation: fadeInUp 0.8s ease-in-out 3.7s forwards; }
+        .project-card:nth-child(4) { animation: fadeInUp 0.8s ease-in-out 3.9s forwards; }
+        .project-card:nth-child(5) { animation: fadeInUp 0.8s ease-in-out 4.1s forwards; }
+        .project-card:nth-child(6) { animation: fadeInUp 0.8s ease-in-out 4.3s forwards; }
+
+        .project-image {
+            height: 220px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .project-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(165, 216, 255, 0.2), rgba(200, 173, 255, 0.2));
+            z-index: 1;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .project-card:hover .project-image::before {
+            opacity: 1;
+        }
+
+        .project-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .project-card:hover .project-image img {
+            transform: scale(1.05);
+        }
+
+        .project-info {
+            padding: 1.8rem;
+        }
+
+        .project-title {
+            font-size: 1.4rem;
+            margin-bottom: 0.8rem;
+            color: var(--dark-color);
+            font-weight: 600;
+        }
+
+        .project-description {
+            margin-bottom: 1.2rem;
+            color: #777;
+            line-height: 1.7;
+        }
+
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.7rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .tech-tag {
+            background-color: var(--primary-color);
+            color: var(--dark-color);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .tech-tag:nth-child(2n) {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .tech-tag:nth-child(3n) {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .tech-tag:nth-child(4n) {
+            background-color: var(--success-color);
+            color: var(--dark-color);
+        }
+
+        .project-links {
+            display: flex;
+            gap: 1.2rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.7rem 1.5rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
+
+        .btn i {
+            margin-right: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background-color: var(--secondary-color);
+            color: white;
+            box-shadow: 0 4px 10px rgba(200, 173, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            background-color: #b18eff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(200, 173, 255, 0.4);
+        }
+
+        .btn-outline {
+            border: 2px solid var(--secondary-color);
+            color: var(--secondary-color);
+            background-color: transparent;
+        }
+
+        .btn-outline:hover {
+            background-color: var(--secondary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(200, 173, 255, 0.3);
+        }
+
+        footer {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            text-align: center;
+            padding: 3rem 0;
+            margin-top: 4rem;
+            clip-path: polygon(0 20px, 100% 0, 100% 100%, 0% 100%);
+            opacity: 0;
+            animation: fadeIn 1s ease-in-out 4.5s forwards;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.8rem;
+            margin: 1.5rem 0;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 1.8rem;
+            transition: var(--transition);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .social-links a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .contact-email {
+            display: inline-block;
+            margin-top: 1rem;
+            color: white;
+            font-size: 1.1rem;
+            text-decoration: none;
+            border-bottom: 1px dashed white;
+            padding-bottom: 2px;
+            transition: var(--transition);
+        }
+
+        .contact-email:hover {
+            color: #f0f0f0;
+            border-bottom-color: #f0f0f0;
+        }
+
+        @media (max-width: 768px) {
+            .name-title h1 {
+                font-size: 2rem;
+                animation: typing-mobile 2s steps(20) forwards, blink-caret 0.75s step-end infinite;
+            }
+
+            @keyframes typing-mobile {
+                from { width: 0; font-size: 0; }
+                to { width: 100%; font-size: 2rem; }
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .projects-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            footer {
+                clip-path: polygon(0 10px, 100% 0, 100% 100%, 0% 100%);
+                padding: 2.5rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="loader" id="loader">
+        <div class="loader-spinner"></div>
+        <div class="loader-text">Загрузка портфолио...</div>
+    </div>
+
+    <header>
+        <div class="header-bg"></div>
+        <div class="header-content container">
+            <div class="name-title">
+                <h1>Гескин Роман - Разработчик</h1>
+            </div>
+            <p class="subtitle">Создаю современные и классные веб-сайты</p>
+        </div>
+    </header>
+
+    <section class="about">
+        <div class="container">
+            <h2>Обо мне</h2>
+            <p>Я frontend разработчик с 1-годичным опытом создания сложных веб-приложений. Специализируюсь на HTML, CSS и JavaScript кодах и классном дизайне. Люблю чистый код, продуманную архитектуру и красивый UI.</p>
+        </div>
+    </section>
+
+    <section class="projects">
+        <div class="container">
+            <h2 class="section-title">Мои проекты</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="https://source.unsplash.com/random/600x400/?tech,code" alt="Технологии">
+                    </div>
+                    <div class="project-info">
+                        <h3 class="project-title">Аналитическая платформа</h3>
+                        <p class="project-description">Система анализа данных в реальном времени с интерактивными дашбордами.</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">React</span>
+                            <span class="tech-tag">D3.js</span>
+                            <span class="tech-tag">Node.js</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://example.com/demo" class="btn btn-primary" target="_blank"><i class="fas fa-eye"></i> Демо</a>
+                            <a href="https://github.com/username/project1" class="btn btn-outline" target="_blank"><i class="fas fa-code"></i> Код</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="https://source.unsplash.com/random/600x400/?ecommerce,shop" alt="Интернет-магазин">
+                    </div>
+                    <div class="project-info">
+                        <h3 class="project-title">Интернет-магазин</h3>
+                        <p class="project-description">Полнофункциональный магазин с корзиной, фильтрами и платежной системой.</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">Vue.js</span>
+                            <span class="tech-tag">Express</span>
+                            <span class="tech-tag">MongoDB</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://example.com/demo" class="btn btn-primary" target="_blank"><i class="fas fa-eye"></i> Демо</a>
+                            <a href="https://github.com/username/project2" class="btn btn-outline" target="_blank"><i class="fas fa-code"></i> Код</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="https://source.unsplash.com/random/600x400/?mobile,app" alt="Мобильное приложение">
+                    </div>
+                    <div class="project-info">
+                        <h3 class="project-title">Мобильное приложение</h3>
+                        <p class="project-description">Кроссплатформенное приложение для управления задачами и проектами.</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">React Native</span>
+                            <span class="tech-tag">Firebase</span>
+                            <span class="tech-tag">Redux</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://play.google.com/store/apps/details?id=com.example.app" class="btn btn-primary" target="_blank"><i class="fab fa-google-play"></i> Google Play</a>
+                            <a href="https://github.com/username/project3" class="btn btn-outline" target="_blank"><i class="fas fa-code"></i> Код</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="https://source.unsplash.com/random/600x400/?blog,writing" alt="Блог платформа">
+                    </div>
+                    <div class="project-info">
+                        <h3 class="project-title">Блог платформа</h3>
+                        <p class="project-description">Платформа для ведения блога с системой комментариев и тегов.</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">Next.js</span>
+                            <span class="tech-tag">GraphQL</span>
+                            <span class="tech-tag">Prisma</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://example-blog.com" class="btn btn-primary" target="_blank"><i class="fas fa-eye"></i> Демо</a>
+                            <a href="https://github.com/username/project4" class="btn btn-outline" target="_blank"><i class="fas fa-code"></i> Код</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="https://source.unsplash.com/random/600x400/?portfolio,design" alt="Портфолио сайт">
+                    </div>
+                    <div class="project-info">
+                        <h3 class="project-title">Портфолио сайт</h3>
+                        <p class="project-description">Минималистичный сайт-портфолио для фотографа с галереей работ.</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">GSAP</span>
+                            <span class="tech-tag">CSS Grid</span>
+                            <span class="tech-tag">Netlify</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://example-portfolio.com" class="btn btn-primary" target="_blank"><i class="fas fa-eye"></i> Демо</a>
+                            <a href="https://github.com/username/project5" class="btn btn-outline" target="_blank"><i class="fas fa-code"></i> Код</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="https://source.unsplash.com/random/600x400/?chat,app" alt="Чат приложение">
+                    </div>
+                    <div class="project-info">
+                        <h3 class="project-title">Чат приложение</h3>
+                        <p class="project-description">Веб-приложение для обмена сообщениями в реальном времени.</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">Socket.io</span>
+                            <span class="tech-tag">Express</span>
+                            <span class="tech-tag">React</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://example-chat.com" class="btn btn-primary" target="_blank"><i class="fas fa-eye"></i> Демо</a>
+                            <a href="https://github.com/username/project6" class="btn btn-outline" target="_blank"><i class="fas fa-code"></i> Код</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <h3>Свяжитесь со мной</h3>
+            <div class="social-links">
+                <a href="https://github.com/username" target="_blank"><i class="fab fa-github"></i></a>
+                <a href="https://linkedin.com/in/username" target="_blank"><i class="fab fa-linkedin"></i></a>
+                <a href="https://twitter.com/username" target="_blank"><i class="fab fa-twitter"></i></a>
+                <a href="mailto:hello@example.com"><i class="fas fa-envelope"></i></a>
+            </div>
+            <a href="mailto:roman@example.com" class="contact-email">the73112@gmail.com</a>
+            <p style="margin-top: 2rem;">&copy; 2025 Гескин Роман. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <script>
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                const loader = document.getElementById('loader');
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 500);
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
